@@ -109,4 +109,14 @@ export default class PathfindingVisualizer extends Component {
   };
 
   /******************** Control mouse events ********************/
+
+  handleMouseDown(row, col) {}
+
+  isGridClear() {}
+
+  handleMouseEnter(row, col) {}
+
+  handleMouseUp(row, col) {}
+
+  handleMouseLeave() {}
 }
