@@ -110,7 +110,44 @@ export default class PathfindingVisualizer extends Component {
 
   /******************** Control mouse events ********************/
 
-  handleMouseDown(row, col) {}
+  handleMouseDown(row, col) {
+    if (!this.state.isRunning) {
+        if (this.isGridClear()) {
+          if (
+            document.getElementById(`node-${row}-${col}`).className ===
+            'node node-start'
+          ) {
+            this.setState({
+              mouseIsPressed: true,
+              isStartNode: true,
+              currRow: row,
+              currCol: col,
+            });
+          } else if (
+            document.getElementById(`node-${row}-${col}`).className ===
+            'node node-finish'
+          ) {
+            this.setState({
+              mouseIsPressed: true,
+              isFinishNode: true,
+              currRow: row,
+              currCol: col,
+            });
+          } else {
+            const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
+            this.setState({
+              grid: newGrid,
+              mouseIsPressed: true,
+              isWallNode: true,
+              currRow: row,
+              currCol: col,
+            });
+          }
+        } else {
+          this.clearGrid();
+        }
+      }
+  }
 
   isGridClear() {}
 
