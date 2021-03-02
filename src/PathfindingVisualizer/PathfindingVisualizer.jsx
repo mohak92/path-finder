@@ -112,61 +112,106 @@ export default class PathfindingVisualizer extends Component {
 
   handleMouseDown(row, col) {
     if (!this.state.isRunning) {
-        if (this.isGridClear()) {
-          if (
-            document.getElementById(`node-${row}-${col}`).className ===
-            'node node-start'
-          ) {
-            this.setState({
-              mouseIsPressed: true,
-              isStartNode: true,
-              currRow: row,
-              currCol: col,
-            });
-          } else if (
-            document.getElementById(`node-${row}-${col}`).className ===
-            'node node-finish'
-          ) {
-            this.setState({
-              mouseIsPressed: true,
-              isFinishNode: true,
-              currRow: row,
-              currCol: col,
-            });
-          } else {
-            const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
-            this.setState({
-              grid: newGrid,
-              mouseIsPressed: true,
-              isWallNode: true,
-              currRow: row,
-              currCol: col,
-            });
-          }
+      if (this.isGridClear()) {
+        if (
+          document.getElementById(`node-${row}-${col}`).className ===
+          "node node-start"
+        ) {
+          this.setState({
+            mouseIsPressed: true,
+            isStartNode: true,
+            currRow: row,
+            currCol: col,
+          });
+        } else if (
+          document.getElementById(`node-${row}-${col}`).className ===
+          "node node-finish"
+        ) {
+          this.setState({
+            mouseIsPressed: true,
+            isFinishNode: true,
+            currRow: row,
+            currCol: col,
+          });
         } else {
-          this.clearGrid();
+          const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
+          this.setState({
+            grid: newGrid,
+            mouseIsPressed: true,
+            isWallNode: true,
+            currRow: row,
+            currCol: col,
+          });
         }
+      } else {
+        this.clearGrid();
       }
+    }
   }
 
   isGridClear() {
     for (const row of this.state.grid) {
-        for (const node of row) {
-          const nodeClassName = document.getElementById(
-            `node-${node.row}-${node.col}`,
-          ).className;
-          if (
-            nodeClassName === 'node node-visited' ||
-            nodeClassName === 'node node-shortest-path'
-          ) {
-            return false;
-          }
+      for (const node of row) {
+        const nodeClassName = document.getElementById(
+          `node-${node.row}-${node.col}`
+        ).className;
+        if (
+          nodeClassName === "node node-visited" ||
+          nodeClassName === "node node-shortest-path"
+        ) {
+          return false;
         }
       }
-      return true;
+    }
+    return true;
   }
 
-  handleMouseEnter(row, col) {}
+  handleMouseEnter(row, col) {
+    if (!this.state.isRunning) {
+      if (this.state.mouseIsPressed) {
+        const nodeClassName = document.getElementById(`node-${row}-${col}`)
+          .className;
+        if (this.state.isStartNode) {
+          if (nodeClassName !== "node node-wall") {
+            const prevStartNode = this.state.grid[this.state.currRow][
+              this.state.currCol
+            ];
+            prevStartNode.isStart = false;
+            document.getElementById(
+              `node-${this.state.currRow}-${this.state.currCol}`
+            ).className = "node";
+
+            this.setState({ currRow: row, currCol: col });
+            const currStartNode = this.state.grid[row][col];
+            currStartNode.isStart = true;
+            document.getElementById(`node-${row}-${col}`).className =
+              "node node-start";
+          }
+          this.setState({ START_NODE_ROW: row, START_NODE_COL: col });
+        } else if (this.state.isFinishNode) {
+          if (nodeClassName !== "node node-wall") {
+            const prevFinishNode = this.state.grid[this.state.currRow][
+              this.state.currCol
+            ];
+            prevFinishNode.isFinish = false;
+            document.getElementById(
+              `node-${this.state.currRow}-${this.state.currCol}`
+            ).className = "node";
+
+            this.setState({ currRow: row, currCol: col });
+            const currFinishNode = this.state.grid[row][col];
+            currFinishNode.isFinish = true;
+            document.getElementById(`node-${row}-${col}`).className =
+              "node node-finish";
+          }
+          this.setState({ FINISH_NODE_ROW: row, FINISH_NODE_COL: col });
+        } else if (this.state.isWallNode) {
+          const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
+          this.setState({ grid: newGrid });
+        }
+      }
+    }
+  }
 
   handleMouseUp(row, col) {}
 
