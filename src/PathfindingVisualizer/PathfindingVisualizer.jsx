@@ -149,7 +149,22 @@ export default class PathfindingVisualizer extends Component {
       }
   }
 
-  isGridClear() {}
+  isGridClear() {
+    for (const row of this.state.grid) {
+        for (const node of row) {
+          const nodeClassName = document.getElementById(
+            `node-${node.row}-${node.col}`,
+          ).className;
+          if (
+            nodeClassName === 'node node-visited' ||
+            nodeClassName === 'node node-shortest-path'
+          ) {
+            return false;
+          }
+        }
+      }
+      return true;
+  }
 
   handleMouseEnter(row, col) {}
 
