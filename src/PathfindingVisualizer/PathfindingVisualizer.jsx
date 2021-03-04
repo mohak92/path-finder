@@ -213,7 +213,35 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
-  handleMouseUp(row, col) {}
+  handleMouseUp(row, col) {
+    if (!this.state.isRunning) {
+      this.setState({ mouseIsPressed: false });
+      if (this.state.isStartNode) {
+        const isStartNode = !this.state.isStartNode;
+        this.setState({
+          isStartNode,
+          START_NODE_ROW: row,
+          START_NODE_COL: col,
+        });
+      } else if (this.state.isFinishNode) {
+        const isFinishNode = !this.state.isFinishNode;
+        this.setState({
+          isFinishNode,
+          FINISH_NODE_ROW: row,
+          FINISH_NODE_COL: col,
+        });
+      }
+      this.getInitialGrid();
+    }
+  }
 
   handleMouseLeave() {}
+
+  /******************** Clear Board/Walls ********************/
+
+  /******************** Create Animations ********************/
+
+  /******************** Create path from start to finish ********************/
+
+  /******************** Create Walls ********************/
 }
