@@ -235,7 +235,19 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
-  handleMouseLeave() {}
+  handleMouseLeave() {
+    if (this.state.isStartNode) {
+        const isStartNode = !this.state.isStartNode;
+        this.setState({isStartNode, mouseIsPressed: false});
+      } else if (this.state.isFinishNode) {
+        const isFinishNode = !this.state.isFinishNode;
+        this.setState({isFinishNode, mouseIsPressed: false});
+      } else if (this.state.isWallNode) {
+        const isWallNode = !this.state.isWallNode;
+        this.setState({isWallNode, mouseIsPressed: false});
+        this.getInitialGrid();
+      }
+  }
 
   /******************** Clear Board/Walls ********************/
 
