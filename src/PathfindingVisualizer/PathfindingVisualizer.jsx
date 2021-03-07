@@ -313,6 +313,54 @@ export default class PathfindingVisualizer extends Component {
 
   /******************** Create Animations ********************/
 
+  visualize(algo) {
+    if (!this.state.isRunning) {
+      this.clearGrid();
+      this.toggleIsRunning();
+      const {grid} = this.state;
+      const startNode =
+        grid[this.state.START_NODE_ROW][this.state.START_NODE_COL];
+      const finishNode =
+        grid[this.state.FINISH_NODE_ROW][this.state.FINISH_NODE_COL];
+      let visitedNodesInOrder;
+      switch (algo) {
+        case 'AStar':
+          visitedNodesInOrder = AStar(grid, startNode, finishNode);
+          break;
+        default:
+          // should never get here
+          break;
+      }
+      const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+      nodesInShortestPathOrder.push('end');
+      this.animate(visitedNodesInOrder, nodesInShortestPathOrder);
+    }
+  }
+
+  animate(visitedNodesInOrder, nodesInShortestPathOrder) {
+    for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+      if (i === visitedNodesInOrder.length) {
+        setTimeout(() => {
+          this.animateShortestPath(nodesInShortestPathOrder);
+        }, 10 * i);
+        return;
+      }
+      setTimeout(() => {
+        const node = visitedNodesInOrder[i];
+        const nodeClassName = document.getElementById(
+          `node-${node.row}-${node.col}`,
+        ).className;
+        if (
+          nodeClassName !== 'node node-start' &&
+          nodeClassName !== 'node node-finish'
+        ) {
+          document.getElementById(`node-${node.row}-${node.col}`).className =
+            'node node-visited';
+        }
+      }, 10 * i);
+    }
+  }
+
   /******************** Create path from start to finish ********************/
 
   /******************** Create Walls ********************/
