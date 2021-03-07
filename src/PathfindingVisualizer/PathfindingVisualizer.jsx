@@ -251,6 +251,48 @@ export default class PathfindingVisualizer extends Component {
 
   /******************** Clear Board/Walls ********************/
 
+  clearGrid() {
+    if (!this.state.isRunning) {
+      const newGrid = this.state.grid.slice();
+      for (const row of newGrid) {
+        for (const node of row) {
+          let nodeClassName = document.getElementById(
+            `node-${node.row}-${node.col}`,
+          ).className;
+          if (
+            nodeClassName !== 'node node-start' &&
+            nodeClassName !== 'node node-finish' &&
+            nodeClassName !== 'node node-wall'
+          ) {
+            document.getElementById(`node-${node.row}-${node.col}`).className =
+              'node';
+            node.isVisited = false;
+            node.distance = Infinity;
+            node.distanceToFinishNode =
+              Math.abs(this.state.FINISH_NODE_ROW - node.row) +
+              Math.abs(this.state.FINISH_NODE_COL - node.col);
+          }
+          if (nodeClassName === 'node node-finish') {
+            node.isVisited = false;
+            node.distance = Infinity;
+            node.distanceToFinishNode = 0;
+          }
+          if (nodeClassName === 'node node-start') {
+            node.isVisited = false;
+            node.distance = Infinity;
+            node.distanceToFinishNode =
+              Math.abs(this.state.FINISH_NODE_ROW - node.row) +
+              Math.abs(this.state.FINISH_NODE_COL - node.col);
+            node.isStart = true;
+            node.isWall = false;
+            node.previousNode = null;
+            node.isNode = true;
+          }
+        }
+      }
+    }
+  }
+
   /******************** Create Animations ********************/
 
   /******************** Create path from start to finish ********************/
