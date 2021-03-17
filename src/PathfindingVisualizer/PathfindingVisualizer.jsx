@@ -362,6 +362,30 @@ export default class PathfindingVisualizer extends Component {
   }
 
   /******************** Create path from start to finish ********************/
+  animateShortestPath(nodesInShortestPathOrder) {
+    for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+      if (nodesInShortestPathOrder[i] === 'end') {
+        setTimeout(() => {
+          this.toggleIsRunning();
+        }, i * 50);
+      } else {
+        setTimeout(() => {
+          const node = nodesInShortestPathOrder[i];
+          const nodeClassName = document.getElementById(
+            `node-${node.row}-${node.col}`,
+          ).className;
+          if (
+            nodeClassName !== 'node node-start' &&
+            nodeClassName !== 'node node-finish'
+          ) {
+            document.getElementById(`node-${node.row}-${node.col}`).className =
+              'node node-shortest-path';
+          }
+        }, i * 40);
+      }
+    }
+  }
 
   /******************** Create Walls ********************/
+  
 }
