@@ -524,3 +524,28 @@ export default class PathfindingVisualizer extends Component {
 }
 
 /******************** Create Walls ********************/
+const getNewGridWithWallToggled = (grid, row, col) => {
+  // mouseDown starts to act strange if I don't make newGrid and work off of grid instead.
+  const newGrid = grid.slice();
+  const node = newGrid[row][col];
+  if (!node.isStart && !node.isFinish && node.isNode) {
+    const newNode = {
+      ...node,
+      isWall: !node.isWall,
+    };
+    newGrid[row][col] = newNode;
+  }
+  return newGrid;
+};
+
+// Backtracks from the finishNode to find the shortest path.
+// Only works when called after the pathfinding methods.
+function getNodesInShortestPathOrder(finishNode) {
+  const nodesInShortestPathOrder = [];
+  let currentNode = finishNode;
+  while (currentNode !== null) {
+    nodesInShortestPathOrder.unshift(currentNode);
+    currentNode = currentNode.previousNode;
+  }
+  return nodesInShortestPathOrder;
+}
