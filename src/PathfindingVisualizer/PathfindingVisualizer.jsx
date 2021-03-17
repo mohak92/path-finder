@@ -237,16 +237,16 @@ export default class PathfindingVisualizer extends Component {
 
   handleMouseLeave() {
     if (this.state.isStartNode) {
-        const isStartNode = !this.state.isStartNode;
-        this.setState({isStartNode, mouseIsPressed: false});
-      } else if (this.state.isFinishNode) {
-        const isFinishNode = !this.state.isFinishNode;
-        this.setState({isFinishNode, mouseIsPressed: false});
-      } else if (this.state.isWallNode) {
-        const isWallNode = !this.state.isWallNode;
-        this.setState({isWallNode, mouseIsPressed: false});
-        this.getInitialGrid();
-      }
+      const isStartNode = !this.state.isStartNode;
+      this.setState({ isStartNode, mouseIsPressed: false });
+    } else if (this.state.isFinishNode) {
+      const isFinishNode = !this.state.isFinishNode;
+      this.setState({ isFinishNode, mouseIsPressed: false });
+    } else if (this.state.isWallNode) {
+      const isWallNode = !this.state.isWallNode;
+      this.setState({ isWallNode, mouseIsPressed: false });
+      this.getInitialGrid();
+    }
   }
 
   /******************** Clear Board/Walls ********************/
@@ -257,27 +257,27 @@ export default class PathfindingVisualizer extends Component {
       for (const row of newGrid) {
         for (const node of row) {
           let nodeClassName = document.getElementById(
-            `node-${node.row}-${node.col}`,
+            `node-${node.row}-${node.col}`
           ).className;
           if (
-            nodeClassName !== 'node node-start' &&
-            nodeClassName !== 'node node-finish' &&
-            nodeClassName !== 'node node-wall'
+            nodeClassName !== "node node-start" &&
+            nodeClassName !== "node node-finish" &&
+            nodeClassName !== "node node-wall"
           ) {
             document.getElementById(`node-${node.row}-${node.col}`).className =
-              'node';
+              "node";
             node.isVisited = false;
             node.distance = Infinity;
             node.distanceToFinishNode =
               Math.abs(this.state.FINISH_NODE_ROW - node.row) +
               Math.abs(this.state.FINISH_NODE_COL - node.col);
           }
-          if (nodeClassName === 'node node-finish') {
+          if (nodeClassName === "node node-finish") {
             node.isVisited = false;
             node.distance = Infinity;
             node.distanceToFinishNode = 0;
           }
-          if (nodeClassName === 'node node-start') {
+          if (nodeClassName === "node node-start") {
             node.isVisited = false;
             node.distance = Infinity;
             node.distanceToFinishNode =
@@ -299,11 +299,11 @@ export default class PathfindingVisualizer extends Component {
       for (const row of newGrid) {
         for (const node of row) {
           let nodeClassName = document.getElementById(
-            `node-${node.row}-${node.col}`,
+            `node-${node.row}-${node.col}`
           ).className;
-          if (nodeClassName === 'node node-wall') {
+          if (nodeClassName === "node node-wall") {
             document.getElementById(`node-${node.row}-${node.col}`).className =
-              'node';
+              "node";
             node.isWall = false;
           }
         }
@@ -317,14 +317,14 @@ export default class PathfindingVisualizer extends Component {
     if (!this.state.isRunning) {
       this.clearGrid();
       this.toggleIsRunning();
-      const {grid} = this.state;
+      const { grid } = this.state;
       const startNode =
         grid[this.state.START_NODE_ROW][this.state.START_NODE_COL];
       const finishNode =
         grid[this.state.FINISH_NODE_ROW][this.state.FINISH_NODE_COL];
       let visitedNodesInOrder;
       switch (algo) {
-        case 'AStar':
+        case "AStar":
           visitedNodesInOrder = AStar(grid, startNode, finishNode);
           break;
         default:
@@ -332,7 +332,7 @@ export default class PathfindingVisualizer extends Component {
           break;
       }
       const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-      nodesInShortestPathOrder.push('end');
+      nodesInShortestPathOrder.push("end");
       this.animate(visitedNodesInOrder, nodesInShortestPathOrder);
     }
   }
@@ -348,14 +348,14 @@ export default class PathfindingVisualizer extends Component {
       setTimeout(() => {
         const node = visitedNodesInOrder[i];
         const nodeClassName = document.getElementById(
-          `node-${node.row}-${node.col}`,
+          `node-${node.row}-${node.col}`
         ).className;
         if (
-          nodeClassName !== 'node node-start' &&
-          nodeClassName !== 'node node-finish'
+          nodeClassName !== "node node-start" &&
+          nodeClassName !== "node node-finish"
         ) {
           document.getElementById(`node-${node.row}-${node.col}`).className =
-            'node node-visited';
+            "node node-visited";
         }
       }, 10 * i);
     }
@@ -364,7 +364,7 @@ export default class PathfindingVisualizer extends Component {
   /******************** Create path from start to finish ********************/
   animateShortestPath(nodesInShortestPathOrder) {
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
-      if (nodesInShortestPathOrder[i] === 'end') {
+      if (nodesInShortestPathOrder[i] === "end") {
         setTimeout(() => {
           this.toggleIsRunning();
         }, i * 50);
@@ -372,20 +372,155 @@ export default class PathfindingVisualizer extends Component {
         setTimeout(() => {
           const node = nodesInShortestPathOrder[i];
           const nodeClassName = document.getElementById(
-            `node-${node.row}-${node.col}`,
+            `node-${node.row}-${node.col}`
           ).className;
           if (
-            nodeClassName !== 'node node-start' &&
-            nodeClassName !== 'node node-finish'
+            nodeClassName !== "node node-start" &&
+            nodeClassName !== "node node-finish"
           ) {
             document.getElementById(`node-${node.row}-${node.col}`).className =
-              'node node-shortest-path';
+              "node node-shortest-path";
           }
         }, i * 40);
       }
     }
   }
 
-  /******************** Create Walls ********************/
-  
+  render() {
+    const { grid, mouseIsPressed } = this.state;
+    return (
+      <div>
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark ">
+          <a className="navbar-brand" href="/">
+            <b>PathFinding Visualizer</b>
+          </a>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <a
+                  className="nav-link"
+                  href="http://www.github.com/PrudhviGNV/pathFinderVisualizer"
+                >
+                  {" "}
+                  PathFinder Visualizer code{" "}
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="https://prudhvignv.github.io">
+                  Check Out Other Cool Projects
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <table
+          className="grid-container"
+          onMouseLeave={() => this.handleMouseLeave()}
+        >
+          <tbody className="grid">
+            {grid.map((row, rowIdx) => {
+              return (
+                <tr key={rowIdx}>
+                  {row.map((node, nodeIdx) => {
+                    const { row, col, isFinish, isStart, isWall } = node;
+                    return (
+                      <Node
+                        key={nodeIdx}
+                        col={col}
+                        isFinish={isFinish}
+                        isStart={isStart}
+                        isWall={isWall}
+                        mouseIsPressed={mouseIsPressed}
+                        onMouseDown={(row, col) =>
+                          this.handleMouseDown(row, col)
+                        }
+                        onMouseEnter={(row, col) =>
+                          this.handleMouseEnter(row, col)
+                        }
+                        onMouseUp={() => this.handleMouseUp(row, col)}
+                        row={row}
+                      ></Node>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <button
+          type="button"
+          className="btn btn-danger"
+          onClick={() => this.clearGrid()}
+        >
+          Clear Grid
+        </button>
+        <button
+          type="button"
+          className="btn btn-warning"
+          onClick={() => this.clearWalls()}
+        >
+          Clear Walls
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => this.visualize("Dijkstra")}
+        >
+          Dijkstra's
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => this.visualize("AStar")}
+        >
+          A*
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => this.visualize("BFS")}
+        >
+          Bread First Search
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => this.visualize("DFS")}
+        >
+          Depth First Search
+        </button>
+        {this.state.isDesktopView ? (
+          <button
+            type="button"
+            className="btn btn-light"
+            onClick={() => this.toggleView()}
+          >
+            Mobile View
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="btn btn-dark"
+            onClick={() => this.toggleView()}
+          >
+            Desktop View
+          </button>
+        )}
+      </div>
+    );
+  }
 }
+
+/******************** Create Walls ********************/
